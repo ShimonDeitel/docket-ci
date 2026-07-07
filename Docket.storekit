@@ -1,0 +1,29 @@
+{
+  "identifier" : "docket",
+  "nonRenewingSubscriptions" : [],
+  "products" : [
+    {
+      "displayPrice" : "2.99",
+      "familyShareable" : false,
+      "internalID" : "docket_pro_unlock",
+      "localizations" : [
+        {
+          "description" : "Unlocks unlimited supply items and full restock history",
+          "displayName" : "Docket Pro",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "docket_pro_unlock",
+      "referenceName" : "Docket Pro Unlock",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_askToBuyEnabled" : false
+  },
+  "subscriptionGroups" : [],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}
