@@ -80,13 +80,23 @@ final class DocketUITests: XCTestCase {
 
     func testDeleteItemViaForm() throws {
         let app = launchApp()
-        let notebooksText = app.staticTexts["Notebooks"]
-        XCTAssertTrue(notebooksText.waitForExistence(timeout: 12))
-        notebooksText.tap()
+        // Query by the row's unambiguous accessibility identifier rather than the
+        // literal "Notebooks" label text — that label matches both the combined
+        // Button element AND, without .accessibilityElement(children: .combine),
+        // the inner Text child independently, causing "multiple matching elements"
+        // for a plain staticTexts["Notebooks"] lookup.
+        let notebooksButton = app.buttons["itemNameLabel_Notebooks"]
+        XCTAssertTrue(notebooksButton.waitForExistence(timeout: 12))
+        notebooksButton.tap()
 
-        app.buttons["deleteItemButton"].tap()
+        let deleteButton = app.buttons["deleteItemButton"]
+        XCTAssertTrue(deleteButton.waitForExistence(timeout: 8), "Delete button did not appear in edit form")
+        if !deleteButton.isHittable {
+            app.swipeUp()
+        }
+        deleteButton.tap()
 
-        XCTAssertFalse(app.staticTexts["Notebooks"].waitForExistence(timeout: 6), "Item was not deleted")
+        XCTAssertFalse(app.buttons["itemNameLabel_Notebooks"].waitForExistence(timeout: 6), "Item was not deleted")
     }
 
     func testFreeLimitTriggersPaywallAtSixthItem() throws {
@@ -131,7 +141,12 @@ final class DocketUITests: XCTestCase {
         nameField.tap()
         nameField.typeText("Rulers")
 
-        app.staticTexts["Category (e.g. Writing)"].tap()
+        // "Category (e.g. Writing)" is a TextField's placeholder string, not a
+        // real StaticText element — SwiftUI doesn't expose empty-field placeholders
+        // as an independently queryable staticTexts element, so that lookup found
+        // nothing. Tap the Form's real inert Section header instead, matching the
+        // fix applied to sibling apps' keyboard-dismiss tests.
+        app.staticTexts["Supply Item"].tap()
         XCTAssertFalse(app.keyboards.element.exists, "Keyboard did not dismiss on tap-outside")
     }
 }

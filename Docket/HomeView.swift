@@ -186,6 +186,8 @@ struct SupplyRow: View {
                     }
                 }
                 .buttonStyle(.plain)
+                .accessibilityElement(children: .combine)
+                .accessibilityIdentifier("itemNameLabel_\(item.name)")
                 Spacer()
                 Text("\(item.remainingQuantity) left")
                     .font(.subheadline.weight(.bold))
